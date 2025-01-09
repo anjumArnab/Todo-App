@@ -1,16 +1,25 @@
-# dbapp
+# To-Do List App
 
-A new Flutter project.
+This is a simple To-Do List app built using Flutter and SQLite. It allows users to create, update, and mark notes as completed. The app uses `sqflite` for local database storage and provides an interactive user interface.
 
-## Getting Started
+## Features
+- Add new notes
+- Update note status (mark as completed or pending)
+- Display notes with priority and completion status
+- View the count of completed and total notes
 
-This project is a starting point for a Flutter application.
+## Technologies Used
+- **Flutter**: Cross-platform mobile app development
+- **SQLite**: Local database for storing notes
+- **sqflite**: Flutter plugin for SQLite
+- **intl**: Used for date formatting
 
-A few resources to get you started if this is your first Flutter project:
+### Prerequisites
+- Flutter SDK installed on your machine
+- Android Studio or Visual Studio Code for development
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Steps to Run the App:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone this repository to your local machine:
+   ```bash
+   git clone https://github.com/anjumArnab/to-do-list-app.git
