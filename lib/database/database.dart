@@ -42,6 +42,15 @@ class DatabaseHelper {
     return result;
   }
 
+   Future<List<Map<String, dynamic>>> searchItems(String keyword) async {
+    Database? db = await this.db;
+    return await db!.query(
+      'items',
+      where: 'name LIKE ?',
+      whereArgs: ['%$keyword%'],
+    );
+  }
+
   Future<List<Note>> getNoteList() async {
     final List<Map<String, dynamic>> noteMapList = await getNoteMapList();
     final List<Note> noteList = [];

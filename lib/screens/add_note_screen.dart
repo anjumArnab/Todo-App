@@ -3,13 +3,12 @@ import 'package:dbapp/models/note_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:dbapp/screens/home_screen.dart';
-import 'package:sqflite/sqflite.dart';
 
 class AddNoteScreen extends StatefulWidget {
   final Note? note;
   final Function? updateNoteList;
 
-  AddNoteScreen({this.note, this.updateNoteList});
+  const AddNoteScreen({super.key, this.note, this.updateNoteList});
 
   @override
   State<AddNoteScreen> createState() => _AddNoteScreenState();
@@ -22,7 +21,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   String btnText = "Add Note";
   String titleText = "Add Note";
 
-  TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
   DateTime _date = DateTime.now();
   final DateFormat _dateFormatter = DateFormat('MMM dd, yyyy');
   final List<String> _priorities = ["Low", "Medium", "High"];
@@ -80,7 +79,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => HomeScreen(),
+            builder: (_) => const HomeScreen(),
           ),
         );
       } else {
@@ -90,7 +89,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => HomeScreen(),
+            builder: (_) => const HomeScreen(),
           ),
         );
       }
@@ -103,7 +102,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => HomeScreen(),
+        builder: (_) => const HomeScreen(),
       ),
     );
     widget.updateNoteList!();
@@ -112,12 +111,13 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purple.shade100,
+      backgroundColor: Colors.purple.shade50,
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -125,23 +125,23 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomeScreen(),
+                            builder: (context) => const HomeScreen(),
                           ),
                         ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.arrow_back,
                     )),
-                SizedBox(
+                const SizedBox(
                   height: 20.0,
                 ),
                 Text(
                   titleText,
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 30.0,
                       fontWeight: FontWeight.bold),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 Form(
@@ -149,12 +149,12 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
                         child: TextFormField(
-                          style: TextStyle(fontSize: 18.0),
+                          style: const TextStyle(fontSize: 18.0),
                           decoration: InputDecoration(
                             labelText: "Add Note",
-                            labelStyle: TextStyle(fontSize: 18.0),
+                            labelStyle: const TextStyle(fontSize: 18.0),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
@@ -167,15 +167,15 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
                         child: TextFormField(
                           readOnly: true,
                           onTap: _handleDatePicker,
                           controller: _dateController,
-                          style: TextStyle(fontSize: 18.0),
+                          style: const TextStyle(fontSize: 18.0),
                           decoration: InputDecoration(
                             labelText: "Date",
-                            labelStyle: TextStyle(fontSize: 18.0),
+                            labelStyle: const TextStyle(fontSize: 18.0),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
@@ -183,10 +183,10 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
                         child: DropdownButtonFormField(
                             isDense: true,
-                            icon: Icon(Icons.arrow_drop_down_circle),
+                            icon: const Icon(Icons.arrow_drop_down_circle),
                             iconSize: 20.0,
                             iconEnabledColor: Theme.of(context).primaryColor,
                             //onChanged: (){},
@@ -195,17 +195,17 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                                 value: priority,
                                 child: Text(
                                   priority,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 18.0,
                                   ),
                                 ),
                               );
                             }).toList(),
-                            style: TextStyle(fontSize: 18.0),
+                            style: const TextStyle(fontSize: 18.0),
                             decoration: InputDecoration(
                               labelText: "Priority",
-                              labelStyle: TextStyle(fontSize: 18.0),
+                              labelStyle: const TextStyle(fontSize: 18.0),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
@@ -225,7 +225,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.purple,
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 10.0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
@@ -233,7 +233,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                         ),
                         child: Text(
                           btnText,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15.0,
                           ),
                         ),
@@ -244,7 +244,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.purple,
                                 foregroundColor: Colors.white,
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
@@ -252,12 +252,12 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                               ),
                               child: Text(
                                 btnText,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15.0,
                                 ),
                               ),
                             )
-                          : SizedBox.shrink(),
+                          : const SizedBox.shrink(),
                     ],
                   ),
                 )
