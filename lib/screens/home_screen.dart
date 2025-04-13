@@ -1,4 +1,4 @@
-import 'package:dbapp/database/database.dart';
+import 'package:dbapp/services/database.dart';
 import 'package:dbapp/models/note_model.dart';
 import 'package:dbapp/screens/add_note_screen.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final DateFormat _dateFormatter = DateFormat("MMM dd, yyyy");
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
+
   _updateNoteList() {
     setState(() {
       _noteList = DatabaseHelper.instance.getNoteList();
@@ -28,7 +29,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final results = await _databaseHelper.searchItems(keyword);
     setState(() {
       _results = results;
+      
     });
+    debugPrint(_results.toString());
+
   }
 
   Widget _buildNote(Note note) {

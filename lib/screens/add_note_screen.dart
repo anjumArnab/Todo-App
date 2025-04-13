@@ -1,4 +1,4 @@
-import 'package:dbapp/database/database.dart';
+import 'package:dbapp/services/database.dart';
 import 'package:dbapp/models/note_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -210,7 +210,8 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
-                            validator: (input) => _priority == null
+                           
+                            validator: (input) => _priority.isEmpty
                                 ? "Please select a priority level"
                                 : null,
                             onChanged: (value) {

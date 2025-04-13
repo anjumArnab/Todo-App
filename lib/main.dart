@@ -1,5 +1,6 @@
 import 'package:dbapp/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const DBApp());
@@ -14,10 +15,9 @@ class DBApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Todo List",
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        textTheme: GoogleFonts.poppinsTextTheme()
       ),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }
