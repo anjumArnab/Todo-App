@@ -1,6 +1,6 @@
 # To-Do List App
 
-This is a simple To-Do List app built using Flutter and SQLite. It allows users to create, update, and mark notes as completed. The app uses `sqflite` for local database storage and provides an interactive user interface.
+This is a simple To-Do List app built using Flutter and SQLite. It allows users to create, update, and mark notes as completed. The app uses `hive` for local database storage and provides an interactive user interface.
 
 ## Features
 - Add new notes
@@ -10,8 +10,7 @@ This is a simple To-Do List app built using Flutter and SQLite. It allows users 
 
 ## Technologies Used
 - **Flutter**: Cross-platform mobile app development
-- **SQLite**: Local database for storing notes
-- **sqflite**: Flutter plugin for SQLite
+- **Hive**: Local database for storing notes
 - **intl**: Used for date formatting
 
 ### Prerequisites
