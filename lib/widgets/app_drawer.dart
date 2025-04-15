@@ -33,58 +33,57 @@ class _AppDrawerState extends State<AppDrawer> {
               color: Colors.deepPurple,
             ),
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Taskio',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Taskio',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Manage your tasks with ease',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
-                    ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Manage your tasks with ease',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
                   ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      const CircleAvatar(
-                        backgroundColor: Colors.white24,
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        _isLoggedIn ? _username : 'Guest',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (_isLoggedIn && _email.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0),
-                      child: Text(
-                        _email,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12,
-                        ),
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    const CircleAvatar(
+                      backgroundColor: Colors.white24,
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white,
                       ),
                     ),
-                ],
-              ),
-           
+                    const SizedBox(width: 12),
+                    Text(
+                      _isLoggedIn ? _username : 'Guest',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+                if (_isLoggedIn && _email.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      _email,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
 
           // Main Navigation Items
@@ -140,7 +139,6 @@ class _AppDrawerState extends State<AppDrawer> {
             },
           ),
 
-         // const Spacer(),
           const Divider(),
 
           // Authentication Section
@@ -228,9 +226,7 @@ class _AppDrawerState extends State<AppDrawer> {
               showSnackBar(context, 'Settings feature coming soon!');
             },
           ),
-         
 
-          
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
