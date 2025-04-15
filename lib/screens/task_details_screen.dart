@@ -24,14 +24,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   late Task currentTask;
   final TaskService _taskService = TaskService();
   final TextEditingController _subtaskController = TextEditingController();
-  
+
   @override
   void initState() {
     super.initState();
     // Create a copy of the task to work with
     currentTask = widget.task;
   }
-  
+
   // Method to get priority color
   Color _getPriorityColor() {
     switch (currentTask.priority) {
@@ -45,7 +45,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         return Colors.orange;
     }
   }
-  
+
   // Toggle subtask completion
   Future<void> _toggleSubtaskCompletion(int index) async {
     await _taskService.toggleSubTaskCompletion(widget.taskKey, index);
@@ -57,11 +57,12 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       });
     }
   }
-  
+
   // Add new subtask
   Future<void> _addSubtask() async {
     if (_subtaskController.text.isNotEmpty) {
-      await _taskService.addSubTaskToTask(widget.taskKey, _subtaskController.text);
+      await _taskService.addSubTaskToTask(
+          widget.taskKey, _subtaskController.text);
       _subtaskController.clear();
       // Refresh task data
       final updatedTask = await _taskService.getTaskByKey(widget.taskKey);
@@ -72,7 +73,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       }
     }
   }
-  
+
   // Remove subtask
   Future<void> _removeSubtask(int index) async {
     await _taskService.removeSubTaskFromTask(widget.taskKey, index);
@@ -84,7 +85,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       });
     }
   }
-  
+
   // Delete task
   Future<void> _deleteTask() async {
     showDialog(
@@ -102,7 +103,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
               await _taskService.deleteTask(widget.taskKey);
               if (!mounted) return;
               Navigator.pop(context); // Close dialog
-              Navigator.pop(context, true); // Return to previous screen with refresh indicator
+              Navigator.pop(context,
+                  true); // Return to previous screen with refresh indicator
             },
             child: const Text('DELETE'),
           ),
@@ -110,7 +112,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       ),
     );
   }
-  
+
   // Navigate to edit screen
   void _editTask() {
     // This would navigate to your task edit screen
@@ -132,7 +134,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         ),
         backgroundColor: Colors.deepPurple,
       ),
-      
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -143,7 +144,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 8),
-                
+
                 // Task Title
                 Text(
                   currentTask.title,
@@ -152,18 +153,18 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                
+
                 const SizedBox(height: 12),
-                
+
                 // Due Date
                 Row(
                   children: [
                     const Icon(Icons.access_time, size: 16, color: Colors.grey),
                     const SizedBox(width: 4),
                     Text(
-                      currentTask.dueDate != null && currentTask.dueDate!.isNotEmpty
-                        ? currentTask.dueDate! 
-                        : 'No due date',
+                      currentTask.dueDate.isNotEmpty
+                          ? currentTask.dueDate
+                          : 'No due date',
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 14,
@@ -171,9 +172,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // Priority
                 Row(
                   children: [
@@ -188,9 +189,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Description
                 const Text(
                   'Description',
@@ -201,14 +202,15 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  currentTask.description != null && currentTask.description!.isNotEmpty
-                    ? currentTask.description! 
-                    : 'No description provided',
+                  currentTask.description != null &&
+                          currentTask.description!.isNotEmpty
+                      ? currentTask.description!
+                      : 'No description provided',
                   style: const TextStyle(fontSize: 14),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Subtasks
                 const Text(
                   'Subtasks',
@@ -218,7 +220,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                
+
                 // Add subtask input
                 Row(
                   children: [
@@ -228,7 +230,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         decoration: const InputDecoration(
                           hintText: 'Add a subtask',
                           border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         ),
                       ),
                     ),
@@ -238,36 +241,34 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 12),
-                
+
                 // Subtask List
-                if (currentTask.subTasks.isEmpty)
-                  const Text('No subtasks yet'),
-                
+                if (currentTask.subTasks.isEmpty) const Text('No subtasks yet'),
+
                 ...List.generate(
                   currentTask.subTasks.length,
-                  (index) => _buildSubtaskItem(currentTask.subTasks[index], index),
+                  (index) =>
+                      _buildSubtaskItem(currentTask.subTasks[index], index),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Action Buttons
                 Row(
                   children: [
                     Expanded(
-                      child: ActionButton(
-                        label: 'EDIT',
-                        onPressed: _editTask,
-                      )
-                    ),
+                        child: ActionButton(
+                      label: 'EDIT',
+                      onPressed: _editTask,
+                    )),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: ActionButton(
-                        label: 'DELETE',
-                        onPressed: _deleteTask,
-                      )
-                    ),
+                        child: ActionButton(
+                      label: 'DELETE',
+                      onPressed: _deleteTask,
+                    )),
                   ],
                 ),
               ],
@@ -302,7 +303,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       ),
     );
   }
-  
+
   @override
   void dispose() {
     _subtaskController.dispose();
