@@ -1,9 +1,9 @@
 import 'package:dbapp/models/subtask.dart';
 import 'package:dbapp/models/task.dart';
 import 'package:dbapp/screens/add_task_screen.dart';
-import 'package:dbapp/screens/calendar_view_screen.dart';
 import 'package:dbapp/screens/task_details_screen.dart';
 import 'package:dbapp/services/database.dart';
+import 'package:dbapp/widgets/app_drawer.dart';
 import 'package:dbapp/widgets/task_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -64,15 +64,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     if (result == true || result == null) {
       _loadTasks();
     }
-  }
-
-  void _navToCalendarScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const CalendarScreen(),
-      ),
-    );
   }
 
 
@@ -172,16 +163,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
-        title: const Text("My Todos"),
+        title: const Text("Taskio"),
         actions: [
           IconButton(
               icon: const Icon(Icons.add),
               onPressed: () => _navToAddTask(context)),
           const SizedBox(width: 10),
-          IconButton(
-              icon: const Icon(Icons.calendar_month_outlined),
-              onPressed: () => _navToCalendarScreen(context)),
-          const SizedBox(width: 15)
+          
         ],
         bottom: TabBar(
           labelColor: Colors.white,
@@ -198,6 +186,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           },
         ),
       ),
+      drawer: AppDrawer(refreshTasks: _loadTasks),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : TabBarView(

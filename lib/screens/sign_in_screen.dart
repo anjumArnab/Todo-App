@@ -1,6 +1,10 @@
+import 'package:dbapp/screens/home_screen.dart';
 import 'package:dbapp/screens/sign_up_screen.dart';
+import 'package:dbapp/services/authentication.dart';
 import 'package:dbapp/widgets/button.dart';
+import 'package:dbapp/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -13,12 +17,104 @@ class _SignInScreenState extends State<SignInScreen> {
   bool _obscurePassword = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  
+  // Get SupabaseClient instance
+  final _supabase = Supabase.instance.client;
+  late final SupaAuthService _authService;
+
+  @override
+  void initState() {
+    super.initState();
+    _authService = SupaAuthService(_supabase);
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  // Changed to non-async function that calls the async function
+  void _signIn() {
+    _handleSignIn();
+  }
+
+  // Actual async implementation
+  Future<void> _handleSignIn() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    
+    // Input validation
+    if (email.isEmpty || password.isEmpty) {
+      showSnackBar(context, 'Please fill in all fields');
+      return;
+    }
+    
+    // Email format validation
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      showSnackBar(context, 'Please enter a valid email address');
+      return;
+    }
+    
+    setState(() {
+      _isLoading = true;
+    });
+    
+    try {
+      // Use auth service to sign in
+      final response = await _authService.signIn(
+        context: context,
+        email: email,
+        password: password,
+      );
+      
+      if (response != null && mounted) {
+        // Navigate to home screen or dashboard on success
+        _navToHomeScreen(context);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  // Changed to non-async function that calls the async function
+  void _forgotPassword() {
+    _handleForgotPassword();
+  }
+
+  // Actual async implementation
+  Future<void> _handleForgotPassword() async {
+    final email = _emailController.text.trim();
+    
+    if (email.isEmpty) {
+      showSnackBar(context, 'Please enter your email address');
+      return;
+    }
+    
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      showSnackBar(context, 'Please enter a valid email address');
+      return;
+    }
+    
+    setState(() {
+      _isLoading = true;
+    });
+    
+    try {
+      await _authService.resetPassword(context, email);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   void _navToSignUpScreen(BuildContext context) {
@@ -30,12 +126,19 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  void _navToHomeScreen(BuildContext context) {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => const HomeScreen()),
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Sign In',
+          'Taskio',
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -44,12 +147,20 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         backgroundColor: Colors.deepPurple,
       ),
-      body: // Sign In Form
-          Padding(
+      body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Welcome back!',
+              style: TextStyle(
+                color: Colors.grey[800],
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
             // Email Field
             const Text(
               'EMAIL',
@@ -67,6 +178,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               child: TextField(
                 controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   hintText: 'example@email.com',
                   contentPadding:
@@ -107,10 +219,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         _obscurePassword = !_obscurePassword;
                       });
                     },
-                    child: Text(
+                    child: const Text(
                       'SHOW',
                       style: TextStyle(
-                        color: const Color(0xFF8000FF),
+                        color: Color(0xFF8000FF),
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -124,18 +236,16 @@ class _SignInScreenState extends State<SignInScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () {
-                  // Handle forgot password
-                },
+                onPressed: _isLoading ? null : _forgotPassword,
                 style: TextButton.styleFrom(
                   minimumSize: Size.zero,
                   padding: EdgeInsets.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                child: Text(
+                child: const Text(
                   'Forgot Password?',
                   style: TextStyle(
-                    color: const Color(0xFF8000FF),
+                    color: Color(0xFF8000FF),
                     fontSize: 12,
                   ),
                 ),
@@ -146,10 +256,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
             // Sign In Button
             ActionButton(
-              label: 'SIGN IN',
-              onPressed: () {
-                // Handle sign in
-              },
+              label: _isLoading ? 'SIGNING IN...' : 'SIGN IN',
+              onPressed: _isLoading ? () {} : _signIn,
             ),
 
             const SizedBox(height: 24),
@@ -174,72 +282,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
             const SizedBox(height: 24),
 
-            // Social Login Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Google Button
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      // Handle Google sign in
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.grey[300]!),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    icon: Icon(
-                      Icons.circle,
-                      size: 18,
-                      color: Colors.blue[400],
-                    ),
-                    label: const Text(
-                      'Google',
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 16),
-
-                // Facebook Button
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      // Handle Facebook sign in
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.grey[300]!),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    icon: Icon(
-                      Icons.square,
-                      size: 18,
-                      color: Colors.blue[800],
-                    ),
-                    label: const Text(
-                      'Facebook',
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
             // Create Account Link
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -252,16 +294,16 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () => _navToSignUpScreen(context),
+                  onPressed: _isLoading ? null : () => _navToSignUpScreen(context),
                   style: TextButton.styleFrom(
                     minimumSize: Size.zero,
                     padding: const EdgeInsets.only(left: 8),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  child: Text(
+                  child: const Text(
                     'Create an account',
                     style: TextStyle(
-                      color: const Color(0xFF8000FF),
+                      color: Color(0xFF8000FF),
                       fontSize: 14,
                     ),
                   ),

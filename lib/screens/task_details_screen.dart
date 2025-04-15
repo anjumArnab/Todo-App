@@ -221,6 +221,18 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                 ),
                 const SizedBox(height: 8),
 
+                const SizedBox(height: 12),
+
+                // Subtask List
+                if (currentTask.subTasks.isEmpty) const Text('No subtasks yet'),
+
+                ...List.generate(
+                  currentTask.subTasks.length,
+                  (index) =>
+                      _buildSubtaskItem(currentTask.subTasks[index], index),
+                ),
+
+                const SizedBox(height: 24),
                 // Add subtask input
                 Row(
                   children: [
@@ -241,18 +253,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     ),
                   ],
                 ),
-
-                const SizedBox(height: 12),
-
-                // Subtask List
-                if (currentTask.subTasks.isEmpty) const Text('No subtasks yet'),
-
-                ...List.generate(
-                  currentTask.subTasks.length,
-                  (index) =>
-                      _buildSubtaskItem(currentTask.subTasks[index], index),
-                ),
-
                 const SizedBox(height: 24),
 
                 // Action Buttons
