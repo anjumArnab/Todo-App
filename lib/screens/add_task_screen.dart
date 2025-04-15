@@ -1,6 +1,10 @@
+import 'package:dbapp/models/subtask.dart';
+import 'package:dbapp/models/task.dart';
+import 'package:dbapp/services/database.dart';
 import 'package:dbapp/widgets/button.dart';
 import 'package:dbapp/widgets/custom_text_field.dart';
 import 'package:dbapp/widgets/priority_button.dart';
+import 'package:dbapp/widgets/switch.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -15,7 +19,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
-  TimeOfDay _selectedTime = const TimeOfDay(hour: 12 , minute: 0);
+  TimeOfDay _selectedTime = const TimeOfDay(hour: 12, minute: 0);
   String _priority = 'Medium';
   bool _reminderEnabled = true;
   final List<TextEditingController> _subtaskControllers = [
@@ -62,6 +66,46 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         _selectedTime = picked;
       });
     }
+  }
+
+  // Save task with embedded subtasks
+  void _saveTask() async {
+    final title = _titleController.text.trim();
+    final description = _descriptionController.text.trim();
+
+    if (title.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Task title can't be empty")),
+      );
+      return;
+    }
+
+    // Format due date and time as strings
+    String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate);
+    String formattedTime = _selectedTime.format(context);
+
+    // Create embedded SubTask objects
+    List<SubTask> subTasks = _subtaskControllers
+        .where((controller) => controller.text.trim().isNotEmpty)
+        .map((controller) => SubTask(title: controller.text.trim()))
+        .toList();
+
+    // Create a Task object with embedded subtasks
+    Task newTask = Task(
+      title: title,
+      description: description,
+      dueDate: formattedDate,
+      dueTime: formattedTime,
+      priority: _priority,
+      subTasks: subTasks,
+    );
+    
+    // Save the task with its embedded subtasks using the TaskService
+    final taskService = TaskService();
+    await taskService.addTask(newTask);
+
+    // Go back to previous screen
+    Navigator.pop(context);
   }
 
   @override
@@ -231,26 +275,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Set Reminder',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Switch(
-                    value: _reminderEnabled,
-                    onChanged: (value) {
-                      setState(() {
-                        _reminderEnabled = value;
-                      });
-                    },
-                    activeColor: Colors.deepPurple,
-                  ),
-                ],
+              SettingSwitch(
+                title: 'SET REMINDER',
+                value: _reminderEnabled,
+                onChanged: (val) {
+                  setState(() {
+                    _reminderEnabled = val;
+                  });
+                },
               ),
               const SizedBox(height: 16),
               const Text(
@@ -312,9 +344,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               const SizedBox(height: 24),
               ActionButton(
                 label: 'SAVE TASK',
-                onPressed: () {
-                  // Save task logic
-                },
+                onPressed: () => _saveTask(),
               ),
             ],
           ),
