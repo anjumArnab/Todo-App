@@ -1,3 +1,4 @@
+import 'package:dbapp/screens/sign_in_screen.dart';
 import 'package:dbapp/widgets/button.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _obscurePassword = true;
   final bool _obscureConfirmPassword = true;
   bool _termsAgreed = true;
+
+  void _navToSignInScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SignInScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -234,7 +244,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       const Text('Already have an account?'),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () => _navToSignInScreen(context),
                         child: const Text(
                           'Sign in',
                           style: TextStyle(
