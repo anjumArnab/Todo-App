@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class SubtaskItem extends StatelessWidget {
   final Map<String, dynamic> subtask;
-
-  const SubtaskItem({Key? key, required this.subtask}) : super(key: key);
-
+  
+  const SubtaskItem({super.key, required this.subtask});
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,11 +32,15 @@ class SubtaskItem extends StatelessWidget {
                 : null,
           ),
           const SizedBox(width: 8),
-          Text(
-            subtask['title'],
-            style: TextStyle(
-              decoration: subtask['isCompleted'] ? TextDecoration.lineThrough : null,
-              color: subtask['isCompleted'] ? Colors.grey : Colors.black,
+          Expanded(  // Add this Expanded widget to handle text overflow
+            child: Text(
+              subtask['title'],
+              style: TextStyle(
+                decoration: subtask['isCompleted'] ? TextDecoration.lineThrough : null,
+                color: subtask['isCompleted'] ? Colors.grey : Colors.black,
+              ),
+              overflow: TextOverflow.ellipsis,  // Add ellipsis for text overflow
+              maxLines: 2,  // Allow up to 2 lines
             ),
           ),
         ],
