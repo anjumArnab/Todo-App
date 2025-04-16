@@ -2,6 +2,7 @@ import 'package:dbapp/models/hive/task.dart';
 import 'package:dbapp/screens/add_task_screen.dart';
 import 'package:dbapp/screens/task_details_screen.dart';
 import 'package:dbapp/services/hive_db.dart';
+import 'package:dbapp/widgets/snack_bar.dart';
 import 'package:dbapp/widgets/task_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -73,9 +74,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         _isLoading = false;
       });
       // Show error if needed
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading tasks: $e')),
-      );
+      showSnackBar(context, 'Error loading tasks: $e');
     }
   }
 
