@@ -1,8 +1,8 @@
-import 'package:dbapp/models/subtask.dart';
-import 'package:dbapp/models/task.dart';
+import 'package:dbapp/models/hive/subtask.dart';
+import 'package:dbapp/models/hive/task.dart';
 import 'package:dbapp/screens/add_task_screen.dart';
 import 'package:dbapp/screens/task_details_screen.dart';
-import 'package:dbapp/services/database.dart';
+import 'package:dbapp/services/hive_db.dart';
 import 'package:dbapp/widgets/app_drawer.dart';
 import 'package:dbapp/widgets/task_tile.dart';
 import 'package:flutter/material.dart';

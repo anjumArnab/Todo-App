@@ -1,6 +1,6 @@
 import 'package:dbapp/screens/home_screen.dart';
 import 'package:dbapp/screens/sign_up_screen.dart';
-import 'package:dbapp/services/authentication.dart';
+import 'package:dbapp/services/supa_auth.dart';
 import 'package:dbapp/widgets/button.dart';
 import 'package:dbapp/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';

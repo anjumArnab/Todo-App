@@ -1,3 +1,4 @@
+import 'package:dbapp/screens/settings.dart';
 import 'package:dbapp/screens/sign_in_screen.dart';
 import 'package:dbapp/screens/sign_up_screen.dart';
 import 'package:dbapp/widgets/snack_bar.dart';
@@ -21,6 +22,15 @@ class _AppDrawerState extends State<AppDrawer> {
   bool _isLoggedIn = false;
   String _username = 'Guest';
   String _email = '';
+
+  void _navToSettingsScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SettingsScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -216,15 +226,7 @@ class _AppDrawerState extends State<AppDrawer> {
           ListTile(
             leading: const Icon(Icons.settings, color: Colors.deepPurple),
             title: const Text('Settings'),
-            onTap: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Settings feature coming soon!'),
-                ),
-              );
-              showSnackBar(context, 'Settings feature coming soon!');
-            },
+            onTap: () => _navToSettingsScreen(context),
           ),
 
           const Padding(

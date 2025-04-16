@@ -1,6 +1,6 @@
-import 'package:dbapp/models/subtask.dart';
-import 'package:dbapp/models/task.dart';
-import 'package:dbapp/services/database.dart';
+import 'package:dbapp/models/hive/subtask.dart';
+import 'package:dbapp/models/hive/task.dart';
+import 'package:dbapp/services/hive_db.dart';
 import 'package:dbapp/widgets/button.dart';
 import 'package:dbapp/widgets/subtask_item.dart';
 import 'package:flutter/material.dart';
