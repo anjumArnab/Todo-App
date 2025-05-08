@@ -1,19 +1,11 @@
 import 'package:dbapp/models/hive/subtask.dart';
 import 'package:dbapp/models/hive/task.dart';
 import 'package:dbapp/screens/home_screen.dart';
-import 'package:dbapp/supa_secret.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
-  // Initialize Supabase
-  await Supabase.initialize(
-    url: url,
-    anonKey: anonKey,
-  );
-
   // Initialize Hive
   await Hive.initFlutter();
 

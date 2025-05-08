@@ -1,10 +1,7 @@
 import 'package:dbapp/screens/home_screen.dart';
 import 'package:dbapp/screens/sign_up_screen.dart';
-import 'package:dbapp/services/supa_auth.dart';
 import 'package:dbapp/widgets/button.dart';
-import 'package:dbapp/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -18,15 +15,10 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
-  
-  // Get SupabaseClient instance
-  final _supabase = Supabase.instance.client;
-  late final SupaAuthService _authService;
 
   @override
   void initState() {
     super.initState();
-    _authService = SupaAuthService(_supabase);
   }
 
   @override
@@ -34,87 +26,6 @@ class _SignInScreenState extends State<SignInScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  // Changed to non-async function that calls the async function
-  void _signIn() {
-    _handleSignIn();
-  }
-
-  // Actual async implementation
-  Future<void> _handleSignIn() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-    
-    // Input validation
-    if (email.isEmpty || password.isEmpty) {
-      showSnackBar(context, 'Please fill in all fields');
-      return;
-    }
-    
-    // Email format validation
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-      showSnackBar(context, 'Please enter a valid email address');
-      return;
-    }
-    
-    setState(() {
-      _isLoading = true;
-    });
-    
-    try {
-      // Use auth service to sign in
-      final response = await _authService.signIn(
-        context: context,
-        email: email,
-        password: password,
-      );
-      
-      if (response != null && mounted) {
-        // Navigate to home screen or dashboard on success
-        _navToHomeScreen(context);
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  // Changed to non-async function that calls the async function
-  void _forgotPassword() {
-    _handleForgotPassword();
-  }
-
-  // Actual async implementation
-  Future<void> _handleForgotPassword() async {
-    final email = _emailController.text.trim();
-    
-    if (email.isEmpty) {
-      showSnackBar(context, 'Please enter your email address');
-      return;
-    }
-    
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-      showSnackBar(context, 'Please enter a valid email address');
-      return;
-    }
-    
-    setState(() {
-      _isLoading = true;
-    });
-    
-    try {
-      await _authService.resetPassword(context, email);
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
   }
 
   void _navToSignUpScreen(BuildContext context) {
@@ -127,11 +38,11 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _navToHomeScreen(BuildContext context) {
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => const HomeScreen()),
-  );
-}
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +147,7 @@ class _SignInScreenState extends State<SignInScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: _isLoading ? null : _forgotPassword,
+                onPressed: _isLoading ? null : () {},
                 style: TextButton.styleFrom(
                   minimumSize: Size.zero,
                   padding: EdgeInsets.zero,
@@ -257,7 +168,7 @@ class _SignInScreenState extends State<SignInScreen> {
             // Sign In Button
             ActionButton(
               label: _isLoading ? 'SIGNING IN...' : 'SIGN IN',
-              onPressed: _isLoading ? () {} : _signIn,
+              onPressed: _isLoading ? () {} : () {},
             ),
 
             const SizedBox(height: 24),
@@ -294,7 +205,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: _isLoading ? null : () => _navToSignUpScreen(context),
+                  onPressed:
+                      _isLoading ? null : () => _navToSignUpScreen(context),
                   style: TextButton.styleFrom(
                     minimumSize: Size.zero,
                     padding: const EdgeInsets.only(left: 8),

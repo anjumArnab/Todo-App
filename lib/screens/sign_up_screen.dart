@@ -1,10 +1,7 @@
 import 'package:dbapp/screens/home_screen.dart';
 import 'package:dbapp/screens/sign_in_screen.dart';
-import 'package:dbapp/services/supa_auth.dart';
 import 'package:dbapp/widgets/button.dart';
-import 'package:dbapp/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -26,14 +23,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _termsAgreed = true;
   bool _isLoading = false;
 
-  // Get SupabaseClient instance
-  final _supabase = Supabase.instance.client;
-  late final SupaAuthService _authService;
-
   @override
   void initState() {
     super.initState();
-    _authService = SupaAuthService(_supabase);
 
     // Set default values for name fields (for convenience)
     _firstNameController.text = 'John';
@@ -48,97 +40,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
-  }
-
-  // Non-async function that calls the async implementation
-  void _signUp() {
-    _handleSignUp();
-  }
-
-  // Actual async implementation
-  Future<void> _handleSignUp() async {
-    final firstName = _firstNameController.text.trim();
-    final lastName = _lastNameController.text.trim();
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-    final confirmPassword = _confirmPasswordController.text.trim();
-
-    // Input validation
-    if (firstName.isEmpty ||
-        lastName.isEmpty ||
-        email.isEmpty ||
-        password.isEmpty ||
-        confirmPassword.isEmpty) {
-      showSnackBar(context, 'Please fill in all fields');
-      return;
-    }
-
-    // Email format validation
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-      showSnackBar(context, 'Please enter a valid email address');
-      return;
-    }
-
-    // Password matching validation
-    if (password != confirmPassword) {
-      showSnackBar(context, 'Passwords do not match');
-      return;
-    }
-
-    // Password strength validation
-    if (password.length < 6) {
-      showSnackBar(context, 'Password must be at least 6 characters long');
-      return;
-    }
-
-    // Terms agreement check
-    if (!_termsAgreed) {
-      showSnackBar(
-          context, 'You must agree to the Terms of Service and Privacy Policy');
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      // Use auth service to sign up
-      final response = await _authService.signUp(
-        context: context,
-        email: email,
-        password: password,
-      );
-
-      if (response != null) {
-        // Store user metadata (first name, last name)
-        if (response.user != null) {
-          await _supabase.from('profiles').upsert({
-            'id': response.user!.id,
-            'first_name': firstName,
-            'last_name': lastName,
-            'updated_at': DateTime.now().toIso8601String(),
-          });
-        }
-
-        if (mounted) {
-          // Navigate to sign in screen or show verification message
-          if (response.session == null) {
-            // Show verification required message and navigate back to sign in
-            Navigator.pop(context);
-          } else {
-            // Auto-signed in (if email confirmation is disabled in Supabase)
-            _navToHomeScreen(context);
-          }
-        }
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
   }
 
   void _navToSignInScreen(BuildContext context) {
@@ -404,7 +305,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ActionButton(
                     label:
                         _isLoading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT',
-                    onPressed: _isLoading ? () {} : _signUp,
+                    onPressed: _isLoading ? () {} : () {},
                   ),
 
                   const SizedBox(height: 16.0),
